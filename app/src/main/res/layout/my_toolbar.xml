@@ -5,7 +5,7 @@
     android:id="@+id/myToolBar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/transparent"
+    android:background="@drawable/gradient_overlay_top_to_bottom_light"
     android:gravity="center"
     android:minHeight="?android:attr/actionBarSize">
 
@@ -23,8 +23,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textColor="@color/text_color"
+        android:textColor="@color/white"
         android:textSize="20sp"
+        android:fontFamily="@font/poppins_semibold"
         android:textStyle="bold"
         tools:text="Toolbar Title" />
 
