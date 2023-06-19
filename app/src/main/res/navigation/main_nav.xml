@@ -27,5 +27,9 @@
         android:id="@+id/moviesPreviewFragment"
         android:name="com.binayshaw7777.ionageassignment.ui.movies_preview.MoviesPreviewFragment"
         android:label="fragment_movies_preview"
-        tools:layout="@layout/fragment_movies_preview" />
+        tools:layout="@layout/fragment_movies_preview" >
+        <argument
+            android:name="movies_details"
+            app:argType="com.binayshaw7777.ionageassignment.model.MovieDetails" />
+    </fragment>
 </navigation>
