@@ -6,6 +6,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.view.View
 import com.tapadoo.alerter.Alerter
 
 
@@ -35,4 +36,16 @@ fun Activity.showAlerter(title: String, message: String, color: Int, drawable: I
         .setIcon(drawable)
         .setDuration(timing)
         .show()
+}
+
+fun View.show() {
+    this.visibility = View.VISIBLE
+}
+
+fun View.hide() {
+    this.visibility = View.GONE
+}
+
+fun View.invisible() {
+    this.visibility = View.INVISIBLE
 }

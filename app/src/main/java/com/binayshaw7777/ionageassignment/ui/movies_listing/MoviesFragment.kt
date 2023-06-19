@@ -13,6 +13,9 @@ import com.binayshaw7777.ionageassignment.adapter.MoviesAdapter
 import com.binayshaw7777.ionageassignment.base.ViewModelFactory
 import com.binayshaw7777.ionageassignment.databinding.FragmentMoviesBinding
 import com.binayshaw7777.ionageassignment.utils.Constants
+import com.binayshaw7777.ionageassignment.utils.Logger
+import com.binayshaw7777.ionageassignment.utils.hide
+import com.binayshaw7777.ionageassignment.utils.show
 
 
 class MoviesFragment : Fragment() {
@@ -29,6 +32,7 @@ class MoviesFragment : Fragment() {
         _binding = FragmentMoviesBinding.inflate(inflater, container, false)
 
         moviesAdapter = MoviesAdapter(requireActivity()) {
+            binding.progressBar.show()
             moviesViewModel.fetchMovieDetailsRequest(it.imdbId)
         }
 
@@ -40,8 +44,9 @@ class MoviesFragment : Fragment() {
 
     private fun initViews() {
         binding.apply {
-
-
+            myToolBar.apply {
+                toolbarTitle.text = getString(R.string.netflix)
+            }
             moviesRecyclerView.adapter = moviesAdapter
             moviesRecyclerView.layoutManager = GridLayoutManager(requireActivity(), 2)
         }
@@ -50,13 +55,20 @@ class MoviesFragment : Fragment() {
     private fun initObserver() {
         moviesViewModel.run {
             fetchMovieSearchRequest(Constants.DEFAULT_MOVIE_NAME)
-
+            errorLiveData.observe(viewLifecycleOwner) {
+                Logger.debugLog("Error: $it")
+            }
+            exceptionLiveData.observe(viewLifecycleOwner) {
+                Logger.debugLog("Exception: $it")
+            }
             movieSearchResponse.observe(viewLifecycleOwner) {
                 moviesAdapter.submitList(it.searchResults)
+                binding.progressBar.hide()
             }
-
             movieDetailsResponse.observe(viewLifecycleOwner) {
-                val action = MoviesFragmentDirections.actionMoviesFragmentToMoviesPreviewFragment(it)
+                binding.progressBar.hide()
+                val action =
+                    MoviesFragmentDirections.actionMoviesFragmentToMoviesPreviewFragment(it)
                 findNavController().navigate(action)
             }
         }
