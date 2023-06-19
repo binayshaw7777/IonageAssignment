@@ -1,6 +1,9 @@
 package com.binayshaw7777.ionageassignment.ui.movies_listing
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +18,7 @@ import com.binayshaw7777.ionageassignment.databinding.FragmentMoviesBinding
 import com.binayshaw7777.ionageassignment.utils.Constants
 import com.binayshaw7777.ionageassignment.utils.Logger
 import com.binayshaw7777.ionageassignment.utils.hide
+import com.binayshaw7777.ionageassignment.utils.hideKeyboard
 import com.binayshaw7777.ionageassignment.utils.show
 
 
@@ -43,6 +47,7 @@ class MoviesFragment : Fragment() {
     }
 
     private fun initViews() {
+        setFilter()
         binding.apply {
             myToolBar.apply {
                 toolbarTitle.text = getString(R.string.netflix)
@@ -72,7 +77,50 @@ class MoviesFragment : Fragment() {
                 findNavController().navigate(action)
             }
         }
+
+
     }
 
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setFilter() {
+
+        binding.apply {
+            searchMovieEditText.apply {
+
+                addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+                    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+                    override fun afterTextChanged(p0: Editable?) {
+                        if (p0.toString().isNotEmpty()) {
+                            setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+                            binding.clearText.visibility = View.VISIBLE
+                            moviesViewModel.fetchMovieSearchRequest(p0.toString().trim())
+                        } else {
+                            binding.clearText.visibility = View.GONE
+                            setCompoundDrawablesWithIntrinsicBounds(R.drawable.search, 0, 0, 0)
+                            moviesViewModel.fetchMovieSearchRequest(Constants.DEFAULT_MOVIE_NAME)
+                        }
+                    }
+                })
+            }
+            clearText.setOnClickListener {
+                requireActivity().hideKeyboard()
+                it.visibility = View.GONE
+                setFilter().apply {
+                    searchMovieEditText.apply {
+                        setText("")
+                        setCompoundDrawablesWithIntrinsicBounds(R.drawable.search, 0, 0, 0)
+                        clearFocus()
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 
 }
